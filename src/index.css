@@ -1,13 +1,23 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.container {
+  margin-left: 2em;
+  margin-right: 2em;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.postList {
+  list-style: none;
+  margin-bottom: 2em;
+}
+
+.postList li {
+  margin-bottom: 0.5em;
+}
+
+.postList a {
+  color: rgb(200, 20, 20);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.postList a:hover {
+  text-decoration: underline;
 }
