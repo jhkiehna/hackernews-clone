@@ -1,11 +1,12 @@
 import React from "react";
-import { fetchUser } from "../utils/api";
+import { fetchUser, fetchPost } from "../utils/api";
 import queryString from "query-string";
 import Moment from "moment";
 
 export default class User extends React.Component {
   state = {
     user: null,
+    posts: null,
     error: null
   };
 
@@ -18,16 +19,29 @@ export default class User extends React.Component {
 
     this.setState({
       user: null,
+      posts: null,
       error: null
     });
 
     fetchUser(username)
-      .then(user =>
+      .then(user => {
+        Promise.all(user.submitted.slice(0, 50).map(fetchPost))
+          .then(posts =>
+            this.setState({
+              posts: posts,
+              error: null
+            })
+          )
+          .catch(({ message }) =>
+            this.setState({
+              error: this.state.error + message
+            })
+          );
         this.setState({
           user,
           error: null
-        })
-      )
+        });
+      })
       .catch(({ message }) =>
         this.setState({
           error: message
@@ -36,7 +50,7 @@ export default class User extends React.Component {
   }
 
   render() {
-    const { user } = this.state;
+    const { user, posts } = this.state;
 
     return (
       <>
@@ -50,6 +64,37 @@ export default class User extends React.Component {
             <h3>About</h3>
 
             <p dangerouslySetInnerHTML={{ __html: user.about }} />
+
+            <h3>Posts</h3>
+
+            <ul className="postList">
+              {posts &&
+                posts.map((post, index) => {
+                  return (
+                    <li key={index}>
+                      <ul className="postList">
+                        <li>
+                          <a
+                            href={post.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {post.title}
+                          </a>
+                        </li>
+
+                        <li>
+                          {" " +
+                            Moment.unix(post.time).format("L") +
+                            ", " +
+                            Moment.unix(post.time).format("LT")}{" "}
+                          with {post.kids ? post.kids.length : "0"} comments
+                        </li>
+                      </ul>
+                    </li>
+                  );
+                })}
+            </ul>
           </div>
         )}
       </>
