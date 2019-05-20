@@ -1,0 +1,23 @@
+.container {
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.postList {
+  list-style: none;
+  margin-bottom: 2em;
+}
+
+.postList li {
+  margin-bottom: 0.5em;
+}
+
+.postList a {
+  color: rgb(200, 20, 20);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.postList a:hover {
+  text-decoration: underline;
+}

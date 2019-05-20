@@ -10,5 +10,14 @@ export function fetchTopPosts() {
       }
 
       return ids.slice(0, 50);
-    });
+    })
+    .then(ids => Promise.all(ids.map(fetchPost)));
+}
+
+export function fetchPost(id) {
+  return fetch(`${api}/item/${id}${json}`).then(res => res.json());
+}
+
+export function fetchUser(name) {
+  return fetch(`${api}/user/${name}${json}`).then(res => res.json());
 }
