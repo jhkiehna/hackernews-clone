@@ -1,9 +1,10 @@
 import React from "react";
 import { fetchUser } from "../utils/api";
+import queryString from "query-string";
+import Moment from "moment";
 
 export default class User extends React.Component {
   state = {
-    username: "test",
     user: null,
     error: null
   };
@@ -13,12 +14,14 @@ export default class User extends React.Component {
   }
 
   handleFetch() {
+    const { username } = queryString.parse(this.props.location.search);
+
     this.setState({
       user: null,
       error: null
     });
 
-    fetchUser(this.state.username)
+    fetchUser(username)
       .then(user =>
         this.setState({
           user,
@@ -33,10 +36,22 @@ export default class User extends React.Component {
   }
 
   render() {
+    const { user } = this.state;
+
     return (
       <>
         <h2>User</h2>
-        <p>{console.log(this.state.username && this.state.username)}</p>
+        {user && (
+          <div>
+            <p>Name: {user.id}</p>
+            <p>Joined: {Moment.unix(user.created).format("LLLL")}</p>
+            <p>Karma: {user.karma}</p>
+
+            <h3>About</h3>
+
+            <p dangerouslySetInnerHTML={{ __html: user.about }} />
+          </div>
+        )}
       </>
     );
   }

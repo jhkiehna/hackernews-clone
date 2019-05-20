@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { fetchTopPosts } from "../utils/api";
 import Moment from "moment";
 
@@ -53,8 +54,10 @@ export default class Top extends React.Component {
                       </a>
                     </li>
                     <li>
-                      by {post.by} on{" "}
-                      {Moment.unix(post.time).format("L") +
+                      by <Link to={`/user?username=${post.by}`}>{post.by}</Link>{" "}
+                      on
+                      {" " +
+                        Moment.unix(post.time).format("L") +
                         ", " +
                         Moment.unix(post.time).format("LT")}{" "}
                       with {post.kids ? post.kids.length : "0"} comments
