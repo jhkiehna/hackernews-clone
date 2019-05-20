@@ -1,16 +1,14 @@
-const MOCK_STORIES = [
-  {
-    title: "FAke story 1",
-    author: "so and so",
-    date: "01/01/1970"
-  },
-  {
-    title: "FAke story 2",
-    author: "another person",
-    date: "01/01/1971"
-  }
-];
+const api = `https://hacker-news.firebaseio.com/v0`;
+const json = ".json?print=pretty";
 
-export function getTopStories() {
-  return MOCK_STORIES;
+export function fetchTopPosts() {
+  return fetch(`${api}/topstories${json}`)
+    .then(res => res.json())
+    .then(ids => {
+      if (!ids) {
+        throw new Error(`There was an error fetching the top posts.`);
+      }
+
+      return ids.slice(0, 50);
+    });
 }

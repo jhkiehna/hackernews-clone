@@ -1,36 +1,50 @@
 import React from "react";
-import { getTopStories } from "../utils/api";
+import { fetchTopPosts } from "../utils/api";
 
 export default class Top extends React.Component {
   state = {
-    stories: []
+    posts: null,
+    error: null
   };
 
   componentDidMount() {
-    this.setState({ stories: getTopStories() });
+    this.handleFetch();
+  }
+
+  componentDidUpdate() {
+    console.log(this.state.posts);
+  }
+
+  handleFetch() {
+    this.setState({
+      posts: null,
+      error: null
+    });
+
+    fetchTopPosts()
+      .then(posts =>
+        this.setState({
+          posts,
+          error: null
+        })
+      )
+      .catch(({ message }) =>
+        this.setState({
+          error: message
+        })
+      );
   }
 
   render() {
-    console.log(this.state);
-
     return (
       <>
         <h1>Top News Component</h1>
 
         <ul>
-          {this.state.stories.map((story, index) => {
-            const { title, author, date } = story;
-
-            return (
-              <li key={index}>
-                <ul>
-                  <li>{title}</li>
-                  <li>{author}</li>
-                  <li>{date}</li>
-                </ul>
-              </li>
-            );
-          })}
+          {this.state.posts &&
+            this.state.posts.map((story, index) => {
+              return <li key={index}>{story}</li>;
+            })}
         </ul>
       </>
     );
