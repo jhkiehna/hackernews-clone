@@ -15,7 +15,14 @@ export default function Nav() {
           </NavLink>
         </li>
         <li>
-          <NavLink className="navLink">New</NavLink>
+          <NavLink
+            className="navLink"
+            to="/new"
+            exact
+            activeStyle={activeStyle}
+          >
+            New
+          </NavLink>
         </li>
       </ul>
     </nav>
