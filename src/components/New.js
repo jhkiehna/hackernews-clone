@@ -1,8 +1,8 @@
 import React from "react";
-import { fetchTopPosts } from "../utils/api";
+import { fetchNewPosts } from "../utils/api";
 import Moment from "moment";
 
-export default class Top extends React.Component {
+export default class New extends React.Component {
   state = {
     posts: null,
     error: null
@@ -18,7 +18,7 @@ export default class Top extends React.Component {
       error: null
     });
 
-    fetchTopPosts()
+    fetchNewPosts()
       .then(posts =>
         this.setState({
           posts,
@@ -35,14 +35,14 @@ export default class Top extends React.Component {
   render() {
     return (
       <>
-        <h2>Top Stories</h2>
+        <h2>New Stories</h2>
 
         <ul className="postList">
           {this.state.posts &&
             this.state.posts.map((post, index) => {
               return (
                 <li key={index}>
-                  <ul className="postList">
+                  <ul key={index} className="postList">
                     <li>
                       <a
                         href={post.url}

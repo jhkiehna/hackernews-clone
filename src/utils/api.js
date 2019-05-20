@@ -14,6 +14,19 @@ export function fetchTopPosts() {
     .then(ids => Promise.all(ids.map(fetchPost)));
 }
 
+export function fetchNewPosts() {
+  return fetch(`${api}/newstories${json}`)
+    .then(res => res.json())
+    .then(ids => {
+      if (!ids) {
+        throw new Error(`There was an error fetching the top posts.`);
+      }
+
+      return ids.slice(0, 50);
+    })
+    .then(ids => Promise.all(ids.map(fetchPost)));
+}
+
 export function fetchPost(id) {
   return fetch(`${api}/item/${id}${json}`).then(res => res.json());
 }
