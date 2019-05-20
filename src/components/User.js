@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchUser, fetchPost } from "../utils/api";
+import { fetchUser, fetchPosts } from "../utils/api";
 import queryString from "query-string";
 import Moment from "moment";
 
@@ -14,6 +14,23 @@ export default class User extends React.Component {
     this.handleFetch();
   }
 
+  componentDidUpdate() {
+    if (this.state.user && !this.state.posts) {
+      fetchPosts(this.state.user.submitted.slice(0, 50))
+        .then(posts =>
+          this.setState({
+            posts: posts,
+            error: null
+          })
+        )
+        .catch(({ message }) =>
+          this.setState({
+            error: this.state.error + message
+          })
+        );
+    }
+  }
+
   handleFetch() {
     const { username } = queryString.parse(this.props.location.search);
 
@@ -24,27 +41,15 @@ export default class User extends React.Component {
     });
 
     fetchUser(username)
-      .then(user => {
-        Promise.all(user.submitted.slice(0, 50).map(fetchPost))
-          .then(posts =>
-            this.setState({
-              posts: posts,
-              error: null
-            })
-          )
-          .catch(({ message }) =>
-            this.setState({
-              error: this.state.error + message
-            })
-          );
+      .then(user =>
         this.setState({
           user,
           error: null
-        });
-      })
+        })
+      )
       .catch(({ message }) =>
         this.setState({
-          error: message
+          error: this.state.error + message
         })
       );
   }
