@@ -41,28 +41,30 @@ export default class Top extends React.Component {
       <>
         <h2>Top Stories</h2>
 
-        <ul>
+        <ul className="postList">
           {this.state.posts &&
             this.state.posts.map((post, index) => {
               return (
-                <ul key={index} className="postList">
-                  <li>
-                    <a
-                      href={post.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {post.title}
-                    </a>
-                  </li>
-                  <li>
-                    by {post.by} on{" "}
-                    {Moment.unix(post.time).format("L") +
-                      ", " +
-                      Moment.unix(post.time).format("LT")}{" "}
-                    with {post.kids ? post.kids.length : "0"} comments
-                  </li>
-                </ul>
+                <li>
+                  <ul key={index} className="postList">
+                    <li>
+                      <a
+                        href={post.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {post.title}
+                      </a>
+                    </li>
+                    <li>
+                      by {post.by} on{" "}
+                      {Moment.unix(post.time).format("L") +
+                        ", " +
+                        Moment.unix(post.time).format("LT")}{" "}
+                      with {post.kids ? post.kids.length : "0"} comments
+                    </li>
+                  </ul>
+                </li>
               );
             })}
         </ul>

@@ -3,13 +3,34 @@
   margin-right: 2em;
 }
 
-.postList {
+nav ul li {
+  display: inline;
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+
+.navLink {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navLink:hover {
+  text-decoration: underline;
+}
+
+.postList,
+nav ul {
   list-style: none;
   margin-bottom: 2em;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .postList li {
   margin-bottom: 0.5em;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .postList a {
