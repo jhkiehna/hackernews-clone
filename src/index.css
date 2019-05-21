@@ -44,8 +44,18 @@ a:hover {
 
 .comment {
   background-color: rgb(228, 228, 228);
-  padding: 0.5em 1em;
+  padding: 0.5em 1em 0.2em 1em;
   border-radius: 5px;
+}
+
+.nestedComment {
+  border-radius: 0px;
+  border-left: 1px dashed black;
+  border-top: 1px dashed black;
+}
+
+.comment ul {
+  margin: 0;
 }
 
 .loading {
