@@ -31,7 +31,8 @@ export function fetchTopPosts() {
 
       return ids.slice(0, 50);
     })
-    .then(ids => Promise.all(ids.map(fetchItem)));
+    .then(ids => Promise.all(ids.map(fetchItem)))
+    .then(posts => removeDeleted(onlyPosts(removeDead(posts))));
 }
 
 export function fetchNewPosts() {
@@ -44,7 +45,8 @@ export function fetchNewPosts() {
 
       return ids.slice(0, 50);
     })
-    .then(ids => Promise.all(ids.map(fetchItem)));
+    .then(ids => Promise.all(ids.map(fetchItem)))
+    .then(posts => removeDeleted(onlyPosts(removeDead(posts))));
 }
 
 export function fetchUser(name) {
