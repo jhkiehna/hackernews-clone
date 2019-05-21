@@ -2,20 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import queryString from "query-string";
 import { fetchComments, fetchItem } from "../utils/api";
+import Loading from "./Loading";
 
 export default class Comments extends React.Component {
   state = {
     post: null,
     comments: null,
-    error: null
+    error: null,
+    loading: true
   };
 
   componentDidMount() {
     this.handleFetch();
-  }
-
-  componentDidUpdate() {
-    this.state.comments && console.log(this.state.comments);
   }
 
   handleFetch() {
@@ -34,24 +32,31 @@ export default class Comments extends React.Component {
             this.setState({
               post: post,
               comments,
-              error: null
+              error: null,
+              loading: false
             })
           )
           .catch(({ message }) =>
             this.setState({
-              error: this.state.error + message
+              error: this.state.error + message,
+              loading: false
             })
           );
       })
       .catch(({ message }) =>
         this.setState({
-          error: this.state.error + message
+          error: this.state.error + message,
+          loading: false
         })
       );
   }
 
   render() {
-    const { comments, post } = this.state;
+    const { comments, post, loading } = this.state;
+
+    if (loading === true) {
+      return <Loading />;
+    }
 
     return (
       <>

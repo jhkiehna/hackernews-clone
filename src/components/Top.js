@@ -2,11 +2,13 @@ import React from "react";
 import { fetchTopPosts } from "../utils/api";
 
 import Posts from "./Posts";
+import Loading from "./Loading";
 
 export default class Top extends React.Component {
   state = {
     posts: null,
-    error: null
+    error: null,
+    loading: true
   };
 
   componentDidMount() {
@@ -23,18 +25,24 @@ export default class Top extends React.Component {
       .then(posts =>
         this.setState({
           posts,
-          error: null
+          error: null,
+          loading: false
         })
       )
       .catch(({ message }) =>
         this.setState({
-          error: message
+          error: message,
+          loading: false
         })
       );
   }
 
   render() {
-    const { posts } = this.state;
+    const { posts, loading } = this.state;
+
+    if (loading === true) {
+      return <Loading />;
+    }
 
     return (
       <>

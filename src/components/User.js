@@ -4,12 +4,14 @@ import queryString from "query-string";
 import Moment from "moment";
 
 import Posts from "./Posts";
+import Loading from "./Loading";
 
 export default class User extends React.Component {
   state = {
     user: null,
     posts: null,
-    error: null
+    error: null,
+    loading: true
   };
 
   componentDidMount() {
@@ -40,24 +42,27 @@ export default class User extends React.Component {
 
             this.setState({
               posts: posts,
-              error: null
+              error: null,
+              loading: false
             });
           })
           .catch(({ message }) =>
             this.setState({
-              error: this.state.error + message
+              error: this.state.error + message,
+              loading: false
             })
           );
       })
       .catch(({ message }) =>
         this.setState({
-          error: this.state.error + message
+          error: this.state.error + message,
+          loading: false
         })
       );
   }
 
   render() {
-    const { user, posts } = this.state;
+    const { user, posts, loading } = this.state;
 
     return (
       <>
@@ -75,11 +80,15 @@ export default class User extends React.Component {
               </>
             )}
 
-            {posts && (
+            {loading === true ? <Loading /> : <></>}
+
+            {posts && loading === false ? (
               <>
                 <h3>Posts</h3>
                 <ul>{posts && <Posts posts={posts} />}</ul>
               </>
+            ) : (
+              <></>
             )}
           </>
         )}
