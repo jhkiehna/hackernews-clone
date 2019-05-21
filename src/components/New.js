@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { fetchNewPosts } from "../utils/api";
-import Moment from "moment";
+
+import Posts from "./Posts";
 
 export default class New extends React.Component {
   state = {
@@ -34,39 +34,12 @@ export default class New extends React.Component {
   }
 
   render() {
+    const { posts } = this.state;
+
     return (
       <>
         <h2>New Stories</h2>
-
-        <ul className="postList">
-          {this.state.posts &&
-            this.state.posts.map((post, index) => {
-              return (
-                <li key={index}>
-                  <ul key={index} className="postList">
-                    <li>
-                      <a
-                        href={post.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {post.title}
-                      </a>
-                    </li>
-                    <li>
-                      by <Link to={`/user?username=${post.by}`}>{post.by}</Link>{" "}
-                      on
-                      {" " +
-                        Moment.unix(post.time).format("L") +
-                        ", " +
-                        Moment.unix(post.time).format("LT")}{" "}
-                      with {post.kids ? post.kids.length : "0"} comments
-                    </li>
-                  </ul>
-                </li>
-              );
-            })}
-        </ul>
+        <ul>{posts && <Posts posts={posts} />}</ul>
       </>
     );
   }

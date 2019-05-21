@@ -19,26 +19,31 @@ nav ul li {
   text-decoration: underline;
 }
 
-.postList,
-nav ul {
+ul {
   list-style: none;
   margin-bottom: 2em;
   margin-left: 0;
   padding-left: 0;
 }
 
-.postList li {
+li {
   margin-bottom: 0.5em;
   margin-left: 0;
   padding-left: 0;
 }
 
-.postList a {
+a {
   color: rgb(200, 20, 20);
   text-decoration: none;
   font-weight: bold;
 }
 
-.postList a:hover {
+a:hover {
   text-decoration: underline;
+}
+
+.comment {
+  background-color: rgb(228, 228, 228);
+  padding: 0.5em 1em;
+  border-radius: 5px;
 }

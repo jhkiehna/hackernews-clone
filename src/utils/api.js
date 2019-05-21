@@ -56,3 +56,9 @@ export function fetchPosts(ids) {
     removeDeleted(onlyPosts(removeDead(posts)))
   );
 }
+
+export function fetchComments(ids) {
+  return Promise.all(ids.map(fetchItem)).then(comments =>
+    removeDeleted(onlyComments(removeDead(comments)))
+  );
+}
