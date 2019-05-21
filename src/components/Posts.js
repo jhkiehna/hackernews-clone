@@ -22,14 +22,20 @@ export default class Posts extends React.Component {
                   </a>
                 </li>
                 <li>
-                  by <Link to={`/user?username=${post.by}`}>{post.by}</Link>
+                  by{" "}
+                  <Link className="littleLink" to={`/user?username=${post.by}`}>
+                    {post.by}
+                  </Link>
                   {" on " +
                     Moment.unix(post.time).format("L") +
                     ", " +
                     Moment.unix(post.time).format("LT")}
                   {" with "}
                   {post.kids ? (
-                    <Link to={`/comments?postid=${post.id}`}>
+                    <Link
+                      className="littleLink"
+                      to={`/comments?postid=${post.id}`}
+                    >
                       {post.kids.length} comments
                     </Link>
                   ) : (

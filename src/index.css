@@ -1,18 +1,21 @@
 .container {
-  margin-left: 2em;
+  margin-left: 15%;
   margin-right: 2em;
 }
 
 nav ul li {
   display: inline;
   margin-left: 0;
-  margin-right: 0.5em;
+  margin-right: 1em;
 }
 
 .navLink {
   color: black;
   text-decoration: none;
   font-weight: bold;
+  font-size: 2em;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .navLink:hover {
@@ -40,6 +43,16 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.littleLink {
+  color: black;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.littleLink:hover {
+  color: rgb(200, 20, 20);
 }
 
 .comment {
