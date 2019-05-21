@@ -1,6 +1,7 @@
 import React from "react";
 import { fetchTopPosts } from "../utils/api";
-import Moment from "moment";
+
+import Posts from "./Posts";
 
 export default class Top extends React.Component {
   state = {
@@ -33,37 +34,13 @@ export default class Top extends React.Component {
   }
 
   render() {
+    const { posts } = this.state;
+
     return (
       <>
         <h2>Top Stories</h2>
 
-        <ul className="postList">
-          {this.state.posts &&
-            this.state.posts.map((post, index) => {
-              return (
-                <li key={index}>
-                  <ul className="postList">
-                    <li>
-                      <a
-                        href={post.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {post.title}
-                      </a>
-                    </li>
-                    <li>
-                      by {post.by} on{" "}
-                      {Moment.unix(post.time).format("L") +
-                        ", " +
-                        Moment.unix(post.time).format("LT")}{" "}
-                      with {post.kids ? post.kids.length : "0"} comments
-                    </li>
-                  </ul>
-                </li>
-              );
-            })}
-        </ul>
+        <ul>{posts && <Posts posts={posts} />}</ul>
       </>
     );
   }
