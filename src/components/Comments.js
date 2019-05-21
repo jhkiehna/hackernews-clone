@@ -6,6 +6,7 @@ import Loading from "./Loading";
 
 export default class Comments extends React.Component {
   state = {
+    nested: this.props.nested || false,
     post: null,
     comments: null,
     error: null,
@@ -17,7 +18,12 @@ export default class Comments extends React.Component {
   }
 
   handleFetch() {
-    const { postid } = queryString.parse(this.props.location.search);
+    const { postid } =
+      this.props.location != null
+        ? queryString.parse(this.props.location.search)
+        : {
+            postid: this.props.postId
+          };
 
     this.setState({
       post: null,
@@ -27,21 +33,29 @@ export default class Comments extends React.Component {
 
     fetchItem(postid)
       .then(post => {
-        fetchComments(post.kids)
-          .then(comments =>
-            this.setState({
-              post: post,
-              comments,
-              error: null,
-              loading: false
-            })
-          )
-          .catch(({ message }) =>
-            this.setState({
-              error: this.state.error + message,
-              loading: false
-            })
-          );
+        if (post.kids) {
+          fetchComments(post.kids)
+            .then(comments =>
+              this.setState({
+                post: post,
+                comments,
+                error: null,
+                loading: false
+              })
+            )
+            .catch(({ message }) =>
+              this.setState({
+                error: this.state.error + message,
+                loading: false
+              })
+            );
+        } else {
+          this.setState({
+            post: post,
+            error: null,
+            loading: false
+          });
+        }
       })
       .catch(({ message }) =>
         this.setState({
@@ -52,7 +66,7 @@ export default class Comments extends React.Component {
   }
 
   render() {
-    const { comments, post, loading } = this.state;
+    const { comments, post, loading, nested } = this.state;
 
     if (loading === true) {
       return <Loading />;
@@ -60,23 +74,33 @@ export default class Comments extends React.Component {
 
     return (
       <>
-        <h3>Comments</h3>
-
-        {comments && (
+        {nested === true ? <></> : <h3>Comments</h3>}
+        {comments && nested === false ? (
           <p>
             {comments.length} comments on{" "}
             <a href={post.url} target="_blank" rel="noopener noreferrer">
               {post.title}
             </a>
           </p>
+        ) : (
+          <></>
         )}
 
         <ul>
           {comments &&
             comments.map((comment, index) => (
-              <li className="comment" key={index}>
+              <li
+                className={`comment ${
+                  nested === true ? "nestedComment" : null
+                }`}
+                key={index}
+              >
                 <Link to={`/user?username=${comment.by}`}>{comment.by}</Link>
                 <p dangerouslySetInnerHTML={{ __html: comment.text }} />
+
+                {comment.kids && (
+                  <Comments postId={comment.id} location={null} nested={true} />
+                )}
               </li>
             ))}
         </ul>
