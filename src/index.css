@@ -47,3 +47,8 @@ a:hover {
   padding: 0.5em 1em;
   border-radius: 5px;
 }
+
+.loading {
+  font-weight: bold;
+  font-size: 2em;
+}
