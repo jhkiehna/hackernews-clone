@@ -55,6 +55,8 @@ export default class Comments extends React.Component {
   }
 
   getComments(post) {
+    console.log(post.kids.length);
+
     fetchComments(post.kids)
       .then(comments =>
         this.setState({
@@ -75,7 +77,7 @@ export default class Comments extends React.Component {
   getTotalComments() {}
 
   render() {
-    const { postId, post, comments, commentCount, loading, error } = this.state;
+    const { postId, post, comments, loading, error } = this.state;
 
     if (loading === true) {
       return <Loading />;
@@ -91,7 +93,7 @@ export default class Comments extends React.Component {
           <>
             <h3>Comments</h3>
             <p>
-              {this.state.commentCount} comments on{" "}
+              {comments.length} comments on{" "}
               <a href={post.url} target="_blank" rel="noopener noreferrer">
                 {post.title}
               </a>
