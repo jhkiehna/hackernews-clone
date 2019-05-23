@@ -17,13 +17,15 @@ export default class Posts extends React.Component {
   }
 
   handleFetch() {
+    const { user, type } = this.state;
+
     this.setState({
       posts: null,
       error: null
     });
 
-    if (this.state.type) {
-      fetchRecentPosts(this.state.type)
+    if (type) {
+      fetchRecentPosts(type)
         .then(posts =>
           this.setState({
             posts,
@@ -39,8 +41,8 @@ export default class Posts extends React.Component {
         });
     }
 
-    if (this.state.user) {
-      fetchPosts(this.state.user.submitted.slice(0, 50))
+    if (user) {
+      fetchPosts(user.submitted.slice(0, 50))
         .then(posts => {
           if (posts.length === 0) {
             posts = null;
