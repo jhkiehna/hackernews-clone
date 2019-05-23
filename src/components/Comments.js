@@ -6,7 +6,7 @@ import Loading from "./Loading";
 
 export default class Comments extends React.Component {
   state = {
-    nested: this.props.nested || false,
+    postId: this.props.postId || null,
     post: null,
     comments: null,
     error: null,
@@ -18,12 +18,7 @@ export default class Comments extends React.Component {
   }
 
   handleFetch() {
-    const { postid } =
-      this.props.location != null
-        ? queryString.parse(this.props.location.search)
-        : {
-            postid: this.props.postId
-          };
+    let { postId } = this.state;
 
     this.setState({
       post: null,
@@ -31,44 +26,56 @@ export default class Comments extends React.Component {
       error: null
     });
 
-    fetchItem(postid)
+    if (postId) {
+      this.getPost(postId);
+    } else {
+      postId = queryString.parse(this.props.location.search).postid;
+      this.getPost(postId);
+    }
+  }
+
+  getPost(postId) {
+    fetchItem(postId)
       .then(post => {
+        this.setState({
+          post,
+          error: null,
+          loading: false
+        });
         if (post.kids) {
-          fetchComments(post.kids)
-            .then(comments =>
-              this.setState({
-                post: post,
-                comments,
-                error: null,
-                loading: false
-              })
-            )
-            .catch(({ message }) =>
-              this.setState({
-                error: this.state.error
-                  ? this.state.error + ", " + message
-                  : message,
-                loading: false
-              })
-            );
-        } else {
-          this.setState({
-            post: post,
-            error: null,
-            loading: false
-          });
+          this.getComments(post);
         }
       })
       .catch(({ message }) =>
         this.setState({
-          error: this.state.error ? this.state.error + ", " + message : message,
+          error: message,
           loading: false
         })
       );
   }
 
+  getComments(post) {
+    fetchComments(post.kids)
+      .then(comments =>
+        this.setState({
+          post: post,
+          comments,
+          error: null,
+          loading: false
+        })
+      )
+      .catch(({ message }) =>
+        this.setState({
+          error: message,
+          loading: false
+        })
+      );
+  }
+
+  getTotalComments() {}
+
   render() {
-    const { comments, post, loading, nested, error } = this.state;
+    const { postId, post, comments, commentCount, loading, error } = this.state;
 
     if (loading === true) {
       return <Loading />;
@@ -80,14 +87,16 @@ export default class Comments extends React.Component {
 
     return (
       <>
-        {nested === true ? <></> : <h3>Comments</h3>}
-        {comments && nested === false ? (
-          <p>
-            {comments.length} comments on{" "}
-            <a href={post.url} target="_blank" rel="noopener noreferrer">
-              {post.title}
-            </a>
-          </p>
+        {comments && postId === null ? (
+          <>
+            <h3>Comments</h3>
+            <p>
+              {this.state.commentCount} comments on{" "}
+              <a href={post.url} target="_blank" rel="noopener noreferrer">
+                {post.title}
+              </a>
+            </p>
+          </>
         ) : (
           <></>
         )}
@@ -96,17 +105,13 @@ export default class Comments extends React.Component {
           {comments &&
             comments.map((comment, index) => (
               <li
-                className={`comment ${
-                  nested === true ? "nestedComment" : null
-                }`}
+                className={`comment ${postId && "nestedComment"}`}
                 key={index}
               >
                 <Link to={`/user?username=${comment.by}`}>{comment.by}</Link>
                 <p dangerouslySetInnerHTML={{ __html: comment.text }} />
 
-                {comment.kids && (
-                  <Comments postId={comment.id} location={null} nested={true} />
-                )}
+                {comment.kids && <Comments postId={comment.id} />}
               </li>
             ))}
         </ul>
