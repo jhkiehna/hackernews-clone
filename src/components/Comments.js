@@ -45,7 +45,9 @@ export default class Comments extends React.Component {
             )
             .catch(({ message }) =>
               this.setState({
-                error: this.state.error + message,
+                error: this.state.error
+                  ? this.state.error + ", " + message
+                  : message,
                 loading: false
               })
             );
@@ -59,17 +61,21 @@ export default class Comments extends React.Component {
       })
       .catch(({ message }) =>
         this.setState({
-          error: this.state.error + message,
+          error: this.state.error ? this.state.error + ", " + message : message,
           loading: false
         })
       );
   }
 
   render() {
-    const { comments, post, loading, nested } = this.state;
+    const { comments, post, loading, nested, error } = this.state;
 
     if (loading === true) {
       return <Loading />;
+    }
+
+    if (error) {
+      throw new Error(error);
     }
 
     return (
