@@ -48,21 +48,27 @@ export default class User extends React.Component {
           })
           .catch(({ message }) =>
             this.setState({
-              error: this.state.error + message,
+              error: this.state.error
+                ? this.state.error + ", " + message
+                : message,
               loading: false
             })
           );
       })
       .catch(({ message }) =>
         this.setState({
-          error: this.state.error + message,
+          error: this.state.error ? this.state.error + ", " + message : message,
           loading: false
         })
       );
   }
 
   render() {
-    const { user, posts, loading } = this.state;
+    const { user, posts, loading, error } = this.state;
+
+    if (error) {
+      throw new Error(error);
+    }
 
     return (
       <>

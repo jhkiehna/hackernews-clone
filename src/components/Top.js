@@ -29,19 +29,23 @@ export default class Top extends React.Component {
           loading: false
         })
       )
-      .catch(({ message }) =>
+      .catch(({ message }) => {
         this.setState({
           error: message,
           loading: false
-        })
-      );
+        });
+      });
   }
 
   render() {
-    const { posts, loading } = this.state;
+    const { posts, loading, error } = this.state;
 
     if (loading === true) {
       return <Loading />;
+    }
+
+    if (error) {
+      throw new Error(error);
     }
 
     return (
