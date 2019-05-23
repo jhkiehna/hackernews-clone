@@ -21,15 +21,15 @@ export default class PostDetails extends React.Component {
           </h3>
         </li>
         <li>
-          by{" "}
+          {" by "}
           <Link className="littleLink" to={`/user?username=${post.by}`}>
             {post.by}
           </Link>
-          {" on " + dateTime.format("L") + " at " + dateTime.format("LT")}
+          {` on ${dateTime.format("L")} at ${dateTime.format("LT")}`}
           {" with "}
           {post.kids ? (
             <Link className="littleLink" to={`/comments?postid=${post.id}`}>
-              {post.kids.length} comments
+              {`${post.kids.length} comments`}
             </Link>
           ) : (
             "0 comments"
