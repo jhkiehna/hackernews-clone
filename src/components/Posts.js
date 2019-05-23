@@ -1,49 +1,88 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import Moment from "moment";
+
+import { fetchRecentPosts, fetchPosts } from "../utils/api";
+import Loading from "./Loading";
+import PostDetails from "./PostDetails";
 
 export default class Posts extends React.Component {
   state = {
-    posts: this.props.posts
+    type: this.props.type || null,
+    user: this.props.user || null,
+    error: null,
+    loading: true
   };
 
+  componentDidMount() {
+    this.handleFetch();
+  }
+
+  handleFetch() {
+    this.setState({
+      posts: null,
+      error: null
+    });
+
+    if (this.state.type) {
+      fetchRecentPosts(this.state.type)
+        .then(posts =>
+          this.setState({
+            posts,
+            error: null,
+            loading: false
+          })
+        )
+        .catch(({ message }) => {
+          this.setState({
+            error: message,
+            loading: false
+          });
+        });
+    }
+
+    if (this.state.user) {
+      fetchPosts(this.state.user.submitted.slice(0, 50))
+        .then(posts => {
+          if (posts.length === 0) {
+            posts = null;
+          }
+
+          this.setState({
+            posts,
+            error: null,
+            loading: false
+          });
+        })
+        .catch(({ message }) =>
+          this.setState({
+            error: message,
+            loading: false
+          })
+        );
+    }
+  }
+
   render() {
-    const { posts } = this.state;
+    const { posts, loading, error } = this.state;
+
+    if (loading === true) {
+      return <Loading />;
+    }
+
+    if (error) {
+      throw new Error(error);
+    }
 
     return (
       <>
-        {posts.map((post, index) => (
-          <li key={index}>
-            <ul>
-              <li>
-                <a href={post.url} target="_blank" rel="noopener noreferrer">
-                  {post.title}
-                </a>
-              </li>
-              <li>
-                by{" "}
-                <Link className="littleLink" to={`/user?username=${post.by}`}>
-                  {post.by}
-                </Link>
-                {" on " +
-                  Moment.unix(post.time).format("L") +
-                  ", " +
-                  Moment.unix(post.time).format("LT")}
-                {" with "}
-                {post.kids ? (
-                  <Link
-                    className="littleLink"
-                    to={`/comments?postid=${post.id}`}
-                  >
-                    {post.kids.length} comments
-                  </Link>
-                ) : (
-                  "0 comments"
-                )}
-              </li>
-            </ul>
-          </li>
-        ))}
+        {posts ? (
+          posts.map(post => (
+            <li key={post.id}>
+              <PostDetails post={post} />
+            </li>
+          ))
+        ) : (
+          <li>Couldn't find any posts by this user</li>
+        )}
       </>
     );
   }

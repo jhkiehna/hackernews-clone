@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchUser, fetchPosts } from "../utils/api";
+import { fetchUser } from "../utils/api";
 import queryString from "query-string";
 import Moment from "moment";
 
@@ -8,8 +8,8 @@ import Loading from "./Loading";
 
 export default class User extends React.Component {
   state = {
+    username: null,
     user: null,
-    posts: null,
     error: null,
     loading: true
   };
@@ -22,60 +22,47 @@ export default class User extends React.Component {
     const { username } = queryString.parse(this.props.location.search);
 
     this.setState({
+      username: username,
       user: null,
-      posts: null,
       error: null
     });
 
     fetchUser(username)
-      .then(user => {
+      .then(user =>
         this.setState({
-          user,
-          error: null
-        });
-
-        fetchPosts(user.submitted.slice(0, 50))
-          .then(posts => {
-            if (posts.length === 0) {
-              posts = null;
-            }
-
-            this.setState({
-              posts: posts,
-              error: null,
-              loading: false
-            });
-          })
-          .catch(({ message }) =>
-            this.setState({
-              error: this.state.error
-                ? this.state.error + ", " + message
-                : message,
-              loading: false
-            })
-          );
-      })
+          user: user,
+          error: null,
+          loading: false
+        })
+      )
       .catch(({ message }) =>
         this.setState({
-          error: this.state.error ? this.state.error + ", " + message : message,
+          error: message,
           loading: false
         })
       );
   }
 
   render() {
-    const { user, posts, loading, error } = this.state;
+    const { user, username, loading, error } = this.state;
 
     if (error) {
       throw new Error(error);
     }
 
+    if (loading) {
+      return <Loading />;
+    }
+
+    if (!user) {
+      return <h2>User {username} not found</h2>;
+    }
+
     return (
       <>
-        <h2>User</h2>
         {user && (
           <>
-            <p>Name: {user.id}</p>
+            <h2>{user.id}</h2>
             <p>Joined: {Moment.unix(user.created).format("LLLL")}</p>
             <p>Karma: {user.karma}</p>
 
@@ -85,17 +72,10 @@ export default class User extends React.Component {
                 <p dangerouslySetInnerHTML={{ __html: user.about }} />
               </>
             )}
-
-            {loading === true ? <Loading /> : <></>}
-
-            {posts && loading === false ? (
-              <>
-                <h3>Posts</h3>
-                <ul>{posts && <Posts posts={posts} />}</ul>
-              </>
-            ) : (
-              <></>
-            )}
+            <h3>Posts by {user.id}</h3>
+            <ul>
+              <Posts user={user} />
+            </ul>
           </>
         )}
       </>

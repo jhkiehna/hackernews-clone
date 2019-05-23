@@ -10,10 +10,7 @@ const resetButtonStyle = {
 };
 
 export default class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: null, errorInfo: null };
-  }
+  state = { error: null, errorInfo: null };
 
   reset() {
     this.setState({
@@ -23,7 +20,6 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
     this.setState({
       error: error,
       errorInfo: errorInfo
@@ -32,15 +28,16 @@ export default class ErrorBoundary extends React.Component {
   }
 
   render() {
-    if (this.state.error) {
-      // You can render any custom fallback UI
+    const { error, errorInfo } = this.state;
+
+    if (error) {
       return (
         <>
           <h1>Something went wrong.</h1>
           <details style={{ whiteSpace: "pre-wrap" }}>
-            {this.state.error && this.state.error.toString()}
+            {error && error.toString()}
             <br />
-            {this.state.errorInfo.componentStack}
+            {errorInfo.componentStack}
           </details>
 
           <button style={resetButtonStyle} onClick={() => this.reset()}>
