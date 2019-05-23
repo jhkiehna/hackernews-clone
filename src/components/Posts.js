@@ -64,7 +64,7 @@ export default class Posts extends React.Component {
   }
 
   render() {
-    const { posts, loading, error } = this.state;
+    const { posts, user, loading, error } = this.state;
 
     if (loading === true) {
       return <Loading />;
@@ -74,17 +74,18 @@ export default class Posts extends React.Component {
       throw new Error(error);
     }
 
+    if (!posts && user) {
+      return <li>Couldn't find any posts by this user</li>;
+    }
+
     return (
       <>
-        {posts ? (
+        {posts &&
           posts.map(post => (
             <li key={post.id}>
               <PostDetails post={post} />
             </li>
-          ))
-        ) : (
-          <li>Couldn't find any posts by this user</li>
-        )}
+          ))}
       </>
     );
   }
