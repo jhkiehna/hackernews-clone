@@ -1,13 +1,13 @@
 import React from "react";
 
-import { fetchRecentPosts } from "../utils/api";
+import { fetchRecentPosts, fetchPosts } from "../utils/api";
 import Loading from "./Loading";
 import PostDetails from "./PostDetails";
 
 export default class Posts extends React.Component {
   state = {
-    type: this.props.type,
-    posts: null,
+    type: this.props.type || null,
+    user: this.props.user || null,
     error: null,
     loading: true
   };
@@ -22,20 +22,43 @@ export default class Posts extends React.Component {
       error: null
     });
 
-    fetchRecentPosts(this.state.type)
-      .then(posts =>
-        this.setState({
-          posts,
-          error: null,
-          loading: false
-        })
-      )
-      .catch(({ message }) => {
-        this.setState({
-          error: message,
-          loading: false
+    if (this.state.type) {
+      fetchRecentPosts(this.state.type)
+        .then(posts =>
+          this.setState({
+            posts,
+            error: null,
+            loading: false
+          })
+        )
+        .catch(({ message }) => {
+          this.setState({
+            error: message,
+            loading: false
+          });
         });
-      });
+    }
+
+    if (this.state.user) {
+      fetchPosts(this.state.user.submitted.slice(0, 50))
+        .then(posts => {
+          if (posts.length === 0) {
+            posts = null;
+          }
+
+          this.setState({
+            posts,
+            error: null,
+            loading: false
+          });
+        })
+        .catch(({ message }) =>
+          this.setState({
+            error: message,
+            loading: false
+          })
+        );
+    }
   }
 
   render() {
@@ -51,11 +74,15 @@ export default class Posts extends React.Component {
 
     return (
       <>
-        {posts.map(post => (
-          <li key={post.id}>
-            <PostDetails post={post} />
-          </li>
-        ))}
+        {posts ? (
+          posts.map(post => (
+            <li key={post.id}>
+              <PostDetails post={post} />
+            </li>
+          ))
+        ) : (
+          <li>Couldn't find any posts by this user</li>
+        )}
       </>
     );
   }
