@@ -62,7 +62,7 @@ export default class User extends React.Component {
       <>
         {user && (
           <>
-            <h2>User {user.id}</h2>
+            <h2>{user.id}</h2>
             <p>Joined: {Moment.unix(user.created).format("LLLL")}</p>
             <p>Karma: {user.karma}</p>
 
@@ -72,7 +72,7 @@ export default class User extends React.Component {
                 <p dangerouslySetInnerHTML={{ __html: user.about }} />
               </>
             )}
-            <h3>Posts by this user</h3>
+            <h3>Posts by {user.id}</h3>
             <ul>
               <Posts user={user} />
             </ul>
