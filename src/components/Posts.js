@@ -79,14 +79,12 @@ export default class Posts extends React.Component {
     }
 
     return (
-      <>
-        {posts &&
-          posts.map(post => (
-            <li key={post.id}>
-              <PostDetails post={post} />
-            </li>
-          ))}
-      </>
+      posts &&
+      posts.map(post => (
+        <li key={post.id}>
+          <PostDetails post={post} />
+        </li>
+      ))
     );
   }
 }
