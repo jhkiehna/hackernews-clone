@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import queryString from "query-string";
+import Moment from "moment";
+
 import { fetchComments, fetchItem } from "../utils/api";
 import Loading from "./Loading";
 
@@ -74,6 +76,13 @@ export default class Comments extends React.Component {
     }
   }
 
+  getTimeAgo(unixTimeStamp) {
+    return Moment.duration(
+      Moment().format("X") - unixTimeStamp,
+      "seconds"
+    ).humanize();
+  }
+
   render() {
     const { comments, post, loading, error } = this.state;
 
@@ -107,6 +116,8 @@ export default class Comments extends React.Component {
                 key={comment.id}
               >
                 <Link to={`/user?username=${comment.by}`}>{comment.by}</Link>
+                {` ${this.getTimeAgo(comment.time)} ago`}
+
                 <p dangerouslySetInnerHTML={{ __html: comment.text }} />
 
                 {comment.kids && <Comments post={comment} />}
