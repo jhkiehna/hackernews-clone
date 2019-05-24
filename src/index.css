@@ -1,5 +1,5 @@
 .container {
-  margin-left: 15%;
+  margin-left: 10%;
   margin-right: 2em;
 }
 
@@ -64,7 +64,7 @@ a:hover {
 .nestedComment {
   border-radius: 0px;
   border-left: 1px dashed black;
-  border-top: 1px dashed black;
+  border-top: 1px solid gray;
 }
 
 .comment ul {

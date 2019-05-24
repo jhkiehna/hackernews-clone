@@ -29,7 +29,7 @@ export default class PostDetails extends React.Component {
           {" with "}
           {post.kids ? (
             <Link className="littleLink" to={`/comments?postid=${post.id}`}>
-              {`${post.kids.length} comments`}
+              {`${post.descendants} comments`}
             </Link>
           ) : (
             "0 comments"
