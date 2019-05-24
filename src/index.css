@@ -62,9 +62,14 @@ a:hover {
 }
 
 .nestedComment {
-  border-radius: 0px;
+  border-radius: 5px;
   border-left: 1px dashed black;
-  border-top: 1px solid gray;
+}
+
+.nestedCommentStriped {
+  background-color: rgb(205, 205, 205);
+  border-radius: 5px;
+  border-left: 1px dashed black;
 }
 
 .comment ul {

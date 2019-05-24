@@ -11,7 +11,8 @@ export default class Comments extends React.Component {
     post: this.props.post || null,
     comments: null,
     error: null,
-    loading: true
+    loading: true,
+    stripedStyle: this.props.stripedStyle || false
   };
 
   componentDidMount() {
@@ -84,7 +85,7 @@ export default class Comments extends React.Component {
   }
 
   render() {
-    const { comments, post, loading, error } = this.state;
+    const { comments, post, loading, error, stripedStyle } = this.state;
 
     if (loading === true) {
       return <Loading />;
@@ -111,7 +112,11 @@ export default class Comments extends React.Component {
             comments.map(comment => (
               <li
                 className={`comment ${
-                  post.type === "comment" ? "nestedComment" : ""
+                  post.type === "comment"
+                    ? stripedStyle === false
+                      ? "nestedComment"
+                      : "nestedCommentStriped"
+                    : ""
                 }`}
                 key={comment.id}
               >
@@ -120,7 +125,9 @@ export default class Comments extends React.Component {
 
                 <p dangerouslySetInnerHTML={{ __html: comment.text }} />
 
-                {comment.kids && <Comments post={comment} />}
+                {comment.kids && (
+                  <Comments post={comment} stripedStyle={!stripedStyle} />
+                )}
               </li>
             ))}
         </ul>
