@@ -1,3 +1,5 @@
+This app was created from scratch using the things I learned from Tyler Mcgginis's React Course
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
